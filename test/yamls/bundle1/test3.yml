@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+ application-sandbox.yml: |
+  vfvf:
+     apiKey: rr
+    rfrfr:
+     apiKey: tt
+     fullLogging: false
+kind: ConfigMap
+metadata:
+ name: test-config
+ namespace: sandbox
