@@ -42,6 +42,30 @@ export type Error = {
   mark: Mark
 }
 
+function validateNestedYamls(file: string, loadedYaml: Record<string, any>): Error[] {
+  const errors: Error[] = []
+
+  Object.entries(loadedYaml).forEach(([key, value]) => {
+    if (typeof value === 'object') {
+      errors.push(...validateNestedYamls(file, value))
+    }
+    if (key.includes('.yml') || key.includes('.yaml')) {
+      try {
+        load(value)
+      } catch (err: any) {
+        const yamlException: YAMLException = err
+        const error: Error = {
+          file: `${file} -> ${key}`,
+          reason: yamlException.reason,
+          mark: yamlException.mark,
+        }
+        errors.push(error)
+      }
+    }
+  })
+  return errors
+}
+
 function processFiles(directoryPath: string, directoryFiles: string[], isRelative: boolean): Error[] {
   const cwd = process.cwd()
   const errors: Error[] = []
@@ -52,7 +76,9 @@ function processFiles(directoryPath: string, directoryFiles: string[], isRelativ
     console.log(`Validating ${green(resolvedPath)}`)
 
     try {
-      load(readFileSync(resolvedPath, 'utf8')) as Record<string, any>
+      const loadedYaml = load(readFileSync(resolvedPath, 'utf8')) as Record<string, any>
+      const nestedYamlErrors = validateNestedYamls(resolvedPath, loadedYaml)
+      errors.push(...nestedYamlErrors)
     } catch (err: any) {
       const yamlException: YAMLException = err
       const error: Error = {
