@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+currency: BTC, USDT, ICX, ATOM, TRX, BNB, EOS, NANO, RVN, HBAR, TUSD, CELO, NXT, IGNIS, DEP, HEDG, BSV, DOGE, BUSD, DASH, DGB, ADA, ARDR, UNI, AVA,GRS, QTUM, LUNA, XEM, PAX, USDC, PAXG, AAVE, SHIB, VET, SAND, BAKE, CAKE, AVAX, KAVA, KSM, ONE, TOMO, XVS, BTT, MATIC, FLOW, USDP, CKB
+data:
+  application-prod.yml: |
+    spring:
+      profiles:
+        active: prod
+      profiles.include: prod-api, prod-api, prod-api,  prod-api,  prod-api,  prod-api,  prod-api,  prod-api,  prod-api,  prod-api,  prod-api,  prod-api,  prod-api
+      application.name: broker-prod
+      liquibase:
+        contexts: common, prod
+      datasource:
+        url: dummy
+        driver-class-name: org.postgresql.Driver
+      jpa:
+        database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+        properties.hibernate.temp.use_jdbc_metadata_defaults: false

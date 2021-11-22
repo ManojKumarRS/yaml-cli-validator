@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "run:relative": "ts-node index.ts validate \"test/yamls/bundle1;test/yamls/bundle2\" -r"
+    "run:relative": "ts-node index.ts validate \"test/yamls/bundle1;test/yamls/bundle2\" -r",
+    "format:relative": "ts-node index.ts format \"test/yamls-formatted\" -r"
   },
   "dependencies": {
     "colorette": "^2.0.16",
