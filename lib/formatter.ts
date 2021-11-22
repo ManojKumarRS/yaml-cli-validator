@@ -1,11 +1,15 @@
 import {readFileSync, writeFileSync} from 'fs'
 import {resolve} from 'path'
-import {load, dump} from 'js-yaml'
+import { load, dump, DumpOptions } from 'js-yaml'
 import {green} from 'colorette'
 import {getFilesInDirectory} from "./utils/fileUtils";
 
 export type FormatterParams = {
     relative?: boolean
+}
+
+const options: DumpOptions = {
+    sortKeys: true
 }
 
 function formatNestedYamls(file: string, loadedYaml: Record<string, any>): Error[] {
@@ -17,7 +21,7 @@ function formatNestedYamls(file: string, loadedYaml: Record<string, any>): Error
         }
         if (key.includes('.yml') || key.includes('.yaml')) {
             const loadedValue = load(value)
-            loadedYaml[key] = dump(loadedValue)
+            loadedYaml[key] = dump(loadedValue, options)
         }
     })
     return errors
@@ -32,7 +36,7 @@ function processFiles(directoryPath: string, directoryFiles: string[], isRelativ
         console.log(`Formatting ${green(resolvedPath)}`)
         const loadedYaml = load(readFileSync(resolvedPath, 'utf8')) as Record<string, any>
         formatNestedYamls(resolvedPath, loadedYaml)
-        writeFileSync(resolvedPath, Buffer.from(dump(loadedYaml)))
+        writeFileSync(resolvedPath, Buffer.from(dump(loadedYaml, options)))
     }
 }
 
